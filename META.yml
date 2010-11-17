@@ -13,7 +13,7 @@ configure_requires:
   ExtUtils::MakeMaker: 6.42
 distribution_type: module
 generated_by: 'Module::Install version 0.98'
-license: gpl
+license: perl
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
   version: 1.4
@@ -30,5 +30,5 @@ requires:
   DBI: 0
   Test::More: 0
 resources:
-  license: http://opensource.org/licenses/gpl-license.php
-version: 0.01
+  license: http://dev.perl.org/licenses/
+version: 0.03

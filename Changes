@@ -1,5 +1,12 @@
 Revision history for CatalystX-Widget-Paginator
 
+0.03    2010-11-17
+        * POD corrected
+        * Tests are ready
+
+0.02    2010-11-16
+        * Add Module::Install bootstrap code
+
 0.01    2010-11-16
         First version, released on an unsuspecting world.
 

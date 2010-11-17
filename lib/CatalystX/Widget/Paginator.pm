@@ -6,11 +6,11 @@ CatalystX::Widget::Paginator - HTML widget for digg-style paginated DBIx::ResulS
 
 =head1 VERSION
 
-Version 0.01
+Version 0.03
 
 =cut
 
-our $VERSION = '0.01';
+our $VERSION = '0.03';
 
 use List::Util qw( min max );
 use Moose;
@@ -25,7 +25,7 @@ with    'Catalyst::Plugin::Widget::WithResultSet';
 
 This widget intended to solve the general problem with paginated results.
 Assume that we have a set of objects (L<DBIx::Class::ResultSet>) and (probably)
-the request parameter indicates the current page. Created widget receives
+the L<Catalyst::Request> parameter indicates the current page. Created widget receives
 resultset and additional arguments, validates pagination and can be queried
 about pagination and objects presented for current page.
 
@@ -67,10 +67,10 @@ Typical usage pattern in the controller:
       my $pg = $c->widget( '+CatalystX::Widget::Paginator', rs => 'Schema::User' );
 
       my $current = $pg->page;     # current page no
-      my $first   = $pg->first;    # first page no ( 1 )
+      my $first   = $pg->first;    # first page no (1)
       my $last    = $pg->last;     # last page no
-      my $pages   = $pg->total;    # total pages ( $last - $first + 1 )
-      my $total   = $pg->total;    # total objects (for all pages)
+      my $pages   = $pg->total;    # total pages ($last - $first + 1)
+      my $total   = $pg->total;    # total objects (overall pages)
       my $objects = $pg->objects;  # objects for current page
 
       $c->res->body( "$pg" );      # render to nice HTML table
@@ -88,7 +88,7 @@ With L<DBIx::Class::ResultSet> instance:
 With paginated L<DBIx::Class::ResultSet> instance:
 
   my $pg = $c->widget( '+CatalystX::Widget::Paginator',
-      rs => $c->model('Schema::User')->search( undef, { rows => 3, page => 15 )
+      rs => $c->model('Schema::User')->search_rs( undef, { rows => 3, page => 15 )
   );
 
 
@@ -124,7 +124,9 @@ multiple columns:
   ------------------------------------------------------------------
   Pages:   <<   1  2   ...   20 21 22 23   ...   40 41  >>   Total:x
 
-Table has C<style>
+Table has 'class' HTML attribute with a C<style> value. Cells 'class'
+named as C<style_prefix>_block, where the names of the blocks the same
+as in example above.
 
 =cut
 
@@ -178,6 +180,10 @@ coerce __PACKAGE__ . '::PositiveInt'
 	=> from 'Defined',
 	=> via { /^(\d+)$/ ? $1 : 1 }
 ;
+subtype __PACKAGE__ . '::ResultSet'
+	=> as 'Object',
+	=> where { $_->isa('DBIx::Class::ResultSet') }
+;
 subtype __PACKAGE__ . '::Text'
 	=> as 'CodeRef'
 ;
@@ -191,34 +197,32 @@ coerce __PACKAGE__ . '::Text'
 
 =head2 new( rs => $name|$instance, %options )
 
-=head3 rs:
+=head3 rs
 
 L<DBIx::Class::ResultSet> name or instance
 
-=head3 options:
+=head3 options
 
-=over
+=head4 delim
 
-=item delim
-
-Delimeter string or C<undef> (default: '...'). See L<RENDERING> for details.
+Delimeter string or C<undef> (default: '...'). See L</RENDERING> for details.
 
 =cut
 
 has delim => ( is => 'ro', isa => 'Str | Undef', default => '...' );
 
 
-=item edges
+=head4 edges
 
 Two element array of strings for left and right edges respectively or C<undef>
-(default: ['<<','>>']). See L<RENDERING> for details.
+(default: ['<<','>>']). See L</RENDERING> for details.
 
 =cut
 
 has edges => ( is => 'ro', isa => __PACKAGE__ . '::Edges | Undef', default => sub{ ['<<','>>'] } );
 
 
-=item invalid
+=head4 invalid
 
 Determines the constructor behavior in the case of an invalid page.
 Could be arbitrary code block or one of predefined words:
@@ -244,7 +248,7 @@ Raise exception C<PAGE_OUT_OF_RANGE>.
 has invalid => ( is => 'ro', isa => __PACKAGE__ . '::Invalid', coerce => 1, default => 'first' );
 
 
-=item link
+=head4 link
 
 Code reference for build link. Receives page number as argument and returns target URI.
 
@@ -264,16 +268,16 @@ sub _link {
 }
 
 
-=item main
+=head4 main
 
-Size of 'main' pages group (default: 10). See L<RENDERING> for details.
+Size of 'main' pages group (default: 10). See L</RENDERING> for details.
 
 =cut
 
 has main  => ( is => 'ro', isa => __PACKAGE__ . '::PositiveInt', default => 10 );
 
 
-=item page
+=head4 page
 
 Current page number.
 
@@ -293,7 +297,7 @@ sub _page {
 }
 
 
-=item page_arg
+=head4 page_arg
 
 Name of query string parameter for page number extracting (default: 'p').
 
@@ -302,7 +306,7 @@ Name of query string parameter for page number extracting (default: 'p').
 has page_arg => ( is => 'ro', isa => 'Str', default => 'p' );
 
 
-=item page_auto
+=head4 page_auto
 
 Try or not to extract C<page_arg> from L<Catalyst::Request> automatically
 (default: 1).
@@ -312,16 +316,16 @@ Try or not to extract C<page_arg> from L<Catalyst::Request> automatically
 has page_auto => ( is => 'ro', isa => 'Bool', default => 1 );
 
 
-=item prefix
+=head4 prefix
 
-First cell content (default: 'Pages'). See L<RENDERING> for details.
+First cell content (default: 'Pages'). See L</RENDERING> for details.
 
 =cut
 
 has prefix => ( is => 'ro', isa => __PACKAGE__ . '::Text | Undef', coerce => 1, default => 'Pages:' );
 
 
-=item rows
+=head4 rows
 
 Number of objects per page (default: 10).
 
@@ -334,49 +338,47 @@ sub _rows {
 }
 
 
-=item side
+=head4 side
 
-Size of 'side' pages groups (default: 2). See L<RENDERING> for details.
+Size of 'side' pages groups (default: 2). See L</RENDERING> for details.
 
 =cut
 
 has side  => ( is => 'ro', isa => __PACKAGE__ . '::NaturalInt', default => 2 );
 
 
-=item style
+=head4 style
 
-CSS class name for table tag (default: 'pages'). See L<RENDERING> for details.
+CSS class name for table tag (default: 'pages'). See L</RENDERING> for details.
 
 =cut
 
 has style => ( is => 'rw', isa => 'Str', default => 'pages' );
 
 
-=item style_prefix
+=head4 style_prefix
 
-CSS class name prefix for table cells (default: 'p_'). See L<RENDERING> for details.
+CSS class name prefix for table cells (default: 'p_'). See L</RENDERING> for details.
 
 =cut
 
 has style_prefix => ( is => 'rw', isa => 'Str', default => 'p_' );
 
 
-=item suffix
+=head4 suffix
 
-Last cell content (default: 'Total: x'). See L<RENDERING> for details.
+Last cell content (default: 'Total: x'). See L</RENDERING> for details.
 
 =cut
 
 has suffix => ( is => 'ro', isa => __PACKAGE__ . '::Text | Undef', coerce => 1, default => sub { sub { 'Total: ' . shift->total } } );
 
 
-=item text
+=head4 text
 
 Code reference for page number formatting. Receives page number as argument and
 returns string. Also can be just a sprintf format string (default: '%s').
-See L<RENDERING> for details.
-
-=back
+See L</RENDERING> for details.
 
 =cut
 
@@ -416,7 +418,7 @@ Paged L<DBIx::Class::ResulSet> instance.
 
 =cut
 
-has objects => ( is => 'ro', isa => __PACKAGE__ . '::ResulSet', lazy => 1, builder => '_objects' );
+has objects => ( is => 'ro', isa => __PACKAGE__ . '::ResultSet', lazy => 1, builder => '_objects' );
 
 sub _objects {
 	my ( $self ) = @_;
