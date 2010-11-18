@@ -6,11 +6,11 @@ CatalystX::Widget::Paginator - HTML widget for digg-style paginated DBIx::ResulS
 
 =head1 VERSION
 
-Version 0.03
+Version 0.04
 
 =cut
 
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 
 use List::Util qw( min max );
 use Moose;
@@ -25,18 +25,17 @@ with    'Catalyst::Plugin::Widget::WithResultSet';
 
 This widget intended to solve the general problem with paginated results.
 Assume that we have a set of objects (L<DBIx::Class::ResultSet>) and (probably)
-the L<Catalyst::Request> parameter indicates the current page. Created widget receives
-resultset and additional arguments, validates pagination and can be queried
-about pagination and objects presented for current page.
+the L<Catalyst::Request> parameter indicates the current page. Created widget
+receives resultset and additional arguments, validates pagination and can be
+queried about pagination and objects presented for current page.
 
 For the correct determination of the current page widget makes taking
 the following steps:
 
-1. Check for already paginated resultset (see L<DBIx::Class::ResultSet> C<rows>
-and C<page> for details). If specified - uses them.
+1. Checks for constructor arguments: C<page>, C<rows>. If specified, uses them.
 
-2. Checks with the same name constructor arguments: C<page>, C<rows>.
-If specified, uses them.
+2. Checks for already paginated resultset (see L<DBIx::Class::ResultSet>
+C<rows> and C<page> attributes for details). If specified - uses them.
 
 3. Uses the default value for C<rows> (10).
 
@@ -64,7 +63,7 @@ Typical usage pattern in the controller:
   sub index :Path :Args(0) {
       my ( $self,$c ) = @_;
 
-      my $pg = $c->widget( '+CatalystX::Widget::Paginator', rs => 'Schema::User' );
+      my $pg = $c->widget( 'Paginator', rs => 'Schema::User' );
 
       my $current = $pg->page;     # current page no
       my $first   = $pg->first;    # first page no (1)
@@ -79,15 +78,15 @@ Typical usage pattern in the controller:
 
 With L<DBIx::Class::ResultSet> instance:
 
-  my $pg = $c->widget( '+CatalystX::Widget::Paginator',
-      rs   => 'Schema::User',
+  my $pg = $c->widget( 'Paginator',
+      rs   => $c->model('Schema::User'),
       rows => 3, page => 15
   );
 
 
 With paginated L<DBIx::Class::ResultSet> instance:
 
-  my $pg = $c->widget( '+CatalystX::Widget::Paginator',
+  my $pg = $c->widget( 'Paginator',
       rs => $c->model('Schema::User')->search_rs( undef, { rows => 3, page => 15 )
   );
 
@@ -97,23 +96,42 @@ Handling invalid page:
   use Try::Tiny;
 
   my $pg = try {
-      $c->widget( '+CatalystX::Widget::Paginator',
+      $c->widget( 'Paginator',
           rs      => 'Schema::User',
           invalid => 'raise'
       )
   } except {
       $c->detach('/error404') if /PAGE_OUT_OF_RANGE/;
-	  die $_;
+      die $_;
   };
 
 
 The same effect:
 
-  my $pg = $c->widget( '+CatalystX::Widget::Paginator',
+  my $pg = $c->widget( 'Paginator',
       rs      => 'Schema::User',
       invalid => sub { $c->detach('/error404' )
   };
 
+Subclassing in your application:
+
+  package YourApp::Widget::SimplePager;
+  use Moose;
+  extends 'CatalystX::Widget::Paginator';
+  
+  has '+edges'    => ( is => 'ro', default => undef );
+  has '+invalid'  => ( is => 'ro', default => 'last' );
+  has '+page_arg' => ( is => 'ro', default => 'page' );
+  has '+prefix'   => ( is => 'ro', default => undef );
+  has '+side'     => ( is => 'ro', default => 0 );
+  has '+suffix'   => ( is => 'ro', default => undef );
+  
+  __PACKAGE__->meta->make_immutable;
+  1;
+
+Usage subclassed widget in the controller:
+
+  $c->widget( '~SimplePager', rs => 'Schema::User' );
 
 =head1 RENDERING
 
@@ -125,8 +143,9 @@ multiple columns:
   Pages:   <<   1  2   ...   20 21 22 23   ...   40 41  >>   Total:x
 
 Table has 'class' HTML attribute with a C<style> value. Cells 'class'
-named as C<style_prefix>_block, where the names of the blocks the same
-as in example above.
+named as C<style_prefix>C<block>, where the names of the blocks the same
+as in example above. Additionally, the current page marked with '<span>'
+tag having C<style_prefix>C<current> 'class' attribute.
 
 =cut
 

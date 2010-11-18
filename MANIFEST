@@ -38,6 +38,8 @@ t/23-style.t
 t/24-suffix.t
 t/25-text.t
 t/26-objects.t
+t/27-namespace.t
+t/28-subclass.t
 t/lib/TestApp.pm
 t/lib/TestApp/boot.pm
 t/lib/TestApp/Controller/Root.pm
@@ -45,6 +47,8 @@ t/lib/TestApp/Model/Simple.pm
 t/lib/TestApp/run
 t/lib/TestApp/Schema.pm
 t/lib/TestApp/Schema/Result/User.pm
+t/lib/TestApp/Widget/Pager.pm
+t/lib/TestApp/Widget/SimplePager.pm
 t/ok/defaults
 t/ok/delim0
 t/ok/delim1
@@ -57,6 +61,7 @@ t/ok/invalid3
 t/ok/invalid4
 t/ok/link0
 t/ok/main0
+t/ok/namespace0
 t/ok/objects0
 t/ok/page0
 t/ok/page1
@@ -76,6 +81,8 @@ t/ok/side0
 t/ok/side1
 t/ok/style0
 t/ok/style1
+t/ok/subclass0
+t/ok/subclass1
 t/ok/suffix0
 t/ok/suffix1
 t/ok/suffix2

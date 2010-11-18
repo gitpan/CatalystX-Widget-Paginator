@@ -30,14 +30,14 @@ sub user :Local :Args(0) {
 sub defaults :Local :Args(0) {
 	my ( $self, $c ) = @_;
 
-	$c->res->body( $c->widget('+CatalystX::Widget::Paginator', rs => 'Simple::User',
+	$c->res->body( $c->widget('Paginator', rs => 'Simple::User',
 	));
 }
 
 sub delim0 :Local :Args(0) {
 	my ( $self, $c ) = @_;
 
-	$c->res->body( $c->widget('+CatalystX::Widget::Paginator', rs => 'Simple::User',
+	$c->res->body( $c->widget('Paginator', rs => 'Simple::User',
 		delim => ' --- ',
 	));
 }
@@ -45,7 +45,7 @@ sub delim0 :Local :Args(0) {
 sub delim1 :Local :Args(0) {
 	my ( $self, $c ) = @_;
 
-	$c->res->body( $c->widget('+CatalystX::Widget::Paginator', rs => 'Simple::User',
+	$c->res->body( $c->widget('Paginator', rs => 'Simple::User',
 		delim => undef,
 	));
 }
@@ -53,7 +53,7 @@ sub delim1 :Local :Args(0) {
 sub edges0 :Local :Args(0) {
 	my ( $self, $c ) = @_;
 
-	$c->res->body( $c->widget('+CatalystX::Widget::Paginator', rs => 'Simple::User',
+	$c->res->body( $c->widget('Paginator', rs => 'Simple::User',
 		edges => undef,
 	));
 }
@@ -61,7 +61,7 @@ sub edges0 :Local :Args(0) {
 sub edges1 :Local :Args(0) {
 	my ( $self, $c ) = @_;
 
-	$c->res->body( $c->widget('+CatalystX::Widget::Paginator', rs => 'Simple::User',
+	$c->res->body( $c->widget('Paginator', rs => 'Simple::User',
 		edges => ['-','+'],
 	));
 }
@@ -69,7 +69,7 @@ sub edges1 :Local :Args(0) {
 sub invalid0 :Local :Args(0) {
 	my ( $self, $c ) = @_;
 
-	$c->res->body( $c->widget('+CatalystX::Widget::Paginator', rs => 'Simple::User',
+	$c->res->body( $c->widget('Paginator', rs => 'Simple::User',
 		page  => 333,
 	));
 }
@@ -77,7 +77,7 @@ sub invalid0 :Local :Args(0) {
 sub invalid1 :Local :Args(0) {
 	my ( $self, $c ) = @_;
 
-	$c->res->body( $c->widget('+CatalystX::Widget::Paginator', rs => 'Simple::User',
+	$c->res->body( $c->widget('Paginator', rs => 'Simple::User',
 		invalid => 'last',
 		page    => 333,
 	));
@@ -87,7 +87,7 @@ sub invalid2 :Local :Args(0) {
 	my ( $self, $c ) = @_;
 
 	eval {
-		$c->res->body( $c->widget('+CatalystX::Widget::Paginator', rs => 'Simple::User',
+		$c->res->body( $c->widget('Paginator', rs => 'Simple::User',
 			invalid => 'raise',
 			page    => 333,
 		));
@@ -99,7 +99,7 @@ sub invalid2 :Local :Args(0) {
 sub invalid3 :Local :Args(0) {
 	my ( $self, $c ) = @_;
 
-	$c->res->body( $c->widget('+CatalystX::Widget::Paginator', rs => 'Simple::User',
+	$c->res->body( $c->widget('Paginator', rs => 'Simple::User',
 		invalid => sub { $c->detach('/index') },
 		page    => 333,
 	));
@@ -108,7 +108,7 @@ sub invalid3 :Local :Args(0) {
 sub invalid4 :Local :Args(0) {
 	my ( $self, $c ) = @_;
 
-	$c->res->body( $c->widget('+CatalystX::Widget::Paginator', rs => 'Simple::User',
+	$c->res->body( $c->widget('Paginator', rs => 'Simple::User',
 		invalid => 'first',
 		page    => 333,
 	));
@@ -117,7 +117,7 @@ sub invalid4 :Local :Args(0) {
 sub link0 :Local :Args(0) {
 	my ( $self, $c ) = @_;
 
-	$c->res->body( $c->widget('+CatalystX::Widget::Paginator', rs => 'Simple::User',
+	$c->res->body( $c->widget('Paginator', rs => 'Simple::User',
 		link => sub { shift() ** 2 },
 	));
 }
@@ -125,15 +125,22 @@ sub link0 :Local :Args(0) {
 sub main0 :Local :Args(0) {
 	my ( $self, $c ) = @_;
 
-	$c->res->body( $c->widget('+CatalystX::Widget::Paginator', rs => 'Simple::User',
+	$c->res->body( $c->widget('Paginator', rs => 'Simple::User',
 		main => 5,
+	));
+}
+
+sub namespace0 :Local :Args(0) {
+	my ( $self, $c ) = @_;
+
+	$c->res->body( $c->widget('+CatalystX::Widget::Paginator', rs => 'Simple::User',
 	));
 }
 
 sub objects0 :Local :Args(0) {
 	my ( $self, $c ) = @_;
 
-	my $w = $c->widget('+CatalystX::Widget::Paginator', rs => 'Simple::User',
+	my $w = $c->widget('Paginator', rs => 'Simple::User',
 		page => 5,
 	);
 
@@ -143,7 +150,7 @@ sub objects0 :Local :Args(0) {
 sub page0 :Local :Args(0) {
 	my ( $self, $c ) = @_;
 
-	$c->res->body( $c->widget('+CatalystX::Widget::Paginator', rs => 'Simple::User',
+	$c->res->body( $c->widget('Paginator', rs => 'Simple::User',
 		page => 5,
 	));
 }
@@ -151,7 +158,7 @@ sub page0 :Local :Args(0) {
 sub page1 :Local :Args(0) {
 	my ( $self, $c ) = @_;
 
-	$c->res->body( $c->widget('+CatalystX::Widget::Paginator',
+	$c->res->body( $c->widget('Paginator',
 		rs => $c->model('Simple::User')->search_rs( undef, { page => 3 } ),
 	));
 }
@@ -159,7 +166,7 @@ sub page1 :Local :Args(0) {
 sub page2 :Local :Args(0) {
 	my ( $self, $c ) = @_;
 
-	$c->res->body( $c->widget('+CatalystX::Widget::Paginator',
+	$c->res->body( $c->widget('Paginator',
 		rs   => $c->model('Simple::User')->search_rs( undef, { page => 3 } ),
 		page => 5,
 	));
@@ -168,14 +175,14 @@ sub page2 :Local :Args(0) {
 sub page_arg0 :Local :Args(0) {
 	my ( $self, $c ) = @_;
 
-	$c->res->body( $c->widget('+CatalystX::Widget::Paginator', rs => 'Simple::User',
+	$c->res->body( $c->widget('Paginator', rs => 'Simple::User',
 	));
 }
 
 sub page_arg1 :Local :Args(0) {
 	my ( $self, $c ) = @_;
 
-	$c->res->body( $c->widget('+CatalystX::Widget::Paginator', rs => 'Simple::User',
+	$c->res->body( $c->widget('Paginator', rs => 'Simple::User',
 		page => 5,
 	));
 }
@@ -183,7 +190,7 @@ sub page_arg1 :Local :Args(0) {
 sub page_arg2 :Local :Args(0) {
 	my ( $self, $c ) = @_;
 
-	$c->res->body( $c->widget('+CatalystX::Widget::Paginator',
+	$c->res->body( $c->widget('Paginator',
 		rs => $c->model('Simple::User')->search_rs( undef, { page => 5 } ),
 	));
 }
@@ -191,7 +198,7 @@ sub page_arg2 :Local :Args(0) {
 sub page_arg3 :Local :Args(0) {
 	my ( $self, $c ) = @_;
 
-	$c->res->body( $c->widget('+CatalystX::Widget::Paginator', rs => 'Simple::User',
+	$c->res->body( $c->widget('Paginator', rs => 'Simple::User',
 		page_arg => 'page',
 	));
 }
@@ -199,7 +206,7 @@ sub page_arg3 :Local :Args(0) {
 sub page_auto0 :Local :Args(0) {
 	my ( $self, $c ) = @_;
 
-	$c->res->body( $c->widget('+CatalystX::Widget::Paginator', rs => 'Simple::User',
+	$c->res->body( $c->widget('Paginator', rs => 'Simple::User',
 		page_auto => 0,
 	));
 }
@@ -207,7 +214,7 @@ sub page_auto0 :Local :Args(0) {
 sub prefix0 :Local :Args(0) {
 	my ( $self, $c ) = @_;
 
-	$c->res->body( $c->widget('+CatalystX::Widget::Paginator', rs => 'Simple::User',
+	$c->res->body( $c->widget('Paginator', rs => 'Simple::User',
 		prefix => 'xxx',
 	));
 }
@@ -215,7 +222,7 @@ sub prefix0 :Local :Args(0) {
 sub prefix1 :Local :Args(0) {
 	my ( $self, $c ) = @_;
 
-	$c->res->body( $c->widget('+CatalystX::Widget::Paginator', rs => 'Simple::User',
+	$c->res->body( $c->widget('Paginator', rs => 'Simple::User',
 		prefix => undef,
 	));
 }
@@ -223,7 +230,7 @@ sub prefix1 :Local :Args(0) {
 sub prefix2 :Local :Args(0) {
 	my ( $self, $c ) = @_;
 
-	$c->res->body( $c->widget('+CatalystX::Widget::Paginator', rs => 'Simple::User',
+	$c->res->body( $c->widget('Paginator', rs => 'Simple::User',
 		prefix => sub { 'Prefix!' . ( shift->total ** 2 ) },
 	));
 }
@@ -231,7 +238,7 @@ sub prefix2 :Local :Args(0) {
 sub rows0 :Local :Args(0) {
 	my ( $self, $c ) = @_;
 
-	$c->res->body( $c->widget('+CatalystX::Widget::Paginator', rs => 'Simple::User',
+	$c->res->body( $c->widget('Paginator', rs => 'Simple::User',
 		rows => 5,
 	));
 }
@@ -239,7 +246,7 @@ sub rows0 :Local :Args(0) {
 sub rows1 :Local :Args(0) {
 	my ( $self, $c ) = @_;
 
-	$c->res->body( $c->widget('+CatalystX::Widget::Paginator',
+	$c->res->body( $c->widget('Paginator',
 		rs => $c->model('Simple::User')->search_rs( undef, { rows => 3 } ),
 	));
 }
@@ -247,7 +254,7 @@ sub rows1 :Local :Args(0) {
 sub rows2 :Local :Args(0) {
 	my ( $self, $c ) = @_;
 
-	$c->res->body( $c->widget('+CatalystX::Widget::Paginator',
+	$c->res->body( $c->widget('Paginator',
 		rs   => $c->model('Simple::User')->search_rs( undef, { rows => 3 } ),
 		rows => 5,
 	));
@@ -256,7 +263,7 @@ sub rows2 :Local :Args(0) {
 sub side0 :Local :Args(0) {
 	my ( $self, $c ) = @_;
 
-	$c->res->body( $c->widget('+CatalystX::Widget::Paginator', rs => 'Simple::User',
+	$c->res->body( $c->widget('Paginator', rs => 'Simple::User',
 		side => 5,
 	));
 }
@@ -264,7 +271,7 @@ sub side0 :Local :Args(0) {
 sub side1 :Local :Args(0) {
 	my ( $self, $c ) = @_;
 
-	$c->res->body( $c->widget('+CatalystX::Widget::Paginator', rs => 'Simple::User',
+	$c->res->body( $c->widget('Paginator', rs => 'Simple::User',
 		side => 0,
 	));
 }
@@ -272,7 +279,7 @@ sub side1 :Local :Args(0) {
 sub style0 :Local :Args(0) {
 	my ( $self, $c ) = @_;
 
-	$c->res->body( $c->widget('+CatalystX::Widget::Paginator', rs => 'Simple::User',
+	$c->res->body( $c->widget('Paginator', rs => 'Simple::User',
 		style => 'xxx',
 	));
 }
@@ -280,15 +287,27 @@ sub style0 :Local :Args(0) {
 sub style1 :Local :Args(0) {
 	my ( $self, $c ) = @_;
 
-	$c->res->body( $c->widget('+CatalystX::Widget::Paginator', rs => 'Simple::User',
+	$c->res->body( $c->widget('Paginator', rs => 'Simple::User',
 		style_prefix => 'xxx',
 	));
+}
+
+sub subclass0 :Local :Args(0) {
+	my ( $self, $c ) = @_;
+
+	$c->res->body( $c->widget('~Pager', rs => 'Simple::User' ));
+}
+
+sub subclass1 :Local :Args(0) {
+	my ( $self, $c ) = @_;
+
+	$c->res->body( $c->widget('~SimplePager', rs => 'Simple::User' ));
 }
 
 sub suffix0 :Local :Args(0) {
 	my ( $self, $c ) = @_;
 
-	$c->res->body( $c->widget('+CatalystX::Widget::Paginator', rs => 'Simple::User',
+	$c->res->body( $c->widget('Paginator', rs => 'Simple::User',
 		suffix => 'xxx',
 	));
 }
@@ -296,7 +315,7 @@ sub suffix0 :Local :Args(0) {
 sub suffix1 :Local :Args(0) {
 	my ( $self, $c ) = @_;
 
-	$c->res->body( $c->widget('+CatalystX::Widget::Paginator', rs => 'Simple::User',
+	$c->res->body( $c->widget('Paginator', rs => 'Simple::User',
 		suffix => undef,
 	));
 }
@@ -304,7 +323,7 @@ sub suffix1 :Local :Args(0) {
 sub suffix2 :Local :Args(0) {
 	my ( $self, $c ) = @_;
 
-	$c->res->body( $c->widget('+CatalystX::Widget::Paginator', rs => 'Simple::User',
+	$c->res->body( $c->widget('Paginator', rs => 'Simple::User',
 		suffix => sub { 'Suffix!' . ( shift->total ** 2 ) },
 	));
 }
@@ -312,7 +331,7 @@ sub suffix2 :Local :Args(0) {
 sub text0 :Local :Args(0) {
 	my ( $self, $c ) = @_;
 
-	$c->res->body( $c->widget('+CatalystX::Widget::Paginator', rs => 'Simple::User',
+	$c->res->body( $c->widget('Paginator', rs => 'Simple::User',
 		text => 't:%s',
 	));
 }
@@ -320,7 +339,7 @@ sub text0 :Local :Args(0) {
 sub text1 :Local :Args(0) {
 	my ( $self, $c ) = @_;
 
-	$c->res->body( $c->widget('+CatalystX::Widget::Paginator', rs => 'Simple::User',
+	$c->res->body( $c->widget('Paginator', rs => 'Simple::User',
 		text => sub { 'text:' . shift() },
 	));
 }

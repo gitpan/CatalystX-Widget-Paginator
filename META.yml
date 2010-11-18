@@ -24,11 +24,11 @@ no_index:
     - t
 requires:
   Catalyst::Model::DBIC::Schema: 0
-  Catalyst::Plugin::Widget: 0
+  Catalyst::Plugin::Widget: 0.03
   Catalyst::Test: 0
   DBD::SQLite: 0
   DBI: 0
   Test::More: 0
 resources:
   license: http://dev.perl.org/licenses/
-version: 0.03
+version: 0.04

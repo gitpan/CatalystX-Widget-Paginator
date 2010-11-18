@@ -1,5 +1,12 @@
 Revision history for CatalystX-Widget-Paginator
 
+0.04    2010-11-18
+        * Now depends on the Catalyst::Plugin::Widget 0.04
+          (new widget namespace logic)
+        * Test for namespace
+        * POD and test for subclassing
+        * POD mistakes fixed
+
 0.03    2010-11-17
         * POD corrected
         * Tests are ready
